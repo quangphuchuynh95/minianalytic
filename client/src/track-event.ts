@@ -15,7 +15,9 @@ export function event(data: EventData) {
       cache: "no-store",
       keepalive: true, // cheap insurance, optional here
       priority: "low", // Chromium: deprioritize vs. app requests
-    }).catch(() => {});
+    }).catch((err) => {
+      console.warn(err);
+    });
   } else {
     console.warn("Missing config env VITE_TRACKER_API_URL");
   }
