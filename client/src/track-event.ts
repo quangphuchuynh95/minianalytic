@@ -18,12 +18,23 @@ export interface EventData<T = Record<string, unknown>> {
   payload?: T;
 }
 
+let currentUserId = "";
+
+export function setAnalyticsUser(user: string | undefined): void {
+  currentUserId = user ?? "";
+}
+
+export function getAnalyticsUser(): string {
+  return currentUserId;
+}
+
 export function event<T = Record<string, unknown>>(data: EventData<T>) {
   if (import.meta.env.VITE_TRACKER_API_URL) {
     const payloadStr = data.payload ? JSON.stringify(data.payload) : "{}";
+    const user = data.user !== undefined ? data.user : currentUserId;
     fetch(import.meta.env.VITE_TRACKER_API_URL, {
       method: "POST",
-      body: [data.user ?? "", data.type ?? "", data.page, payloadStr].join("\n"),
+      body: [user, data.type ?? "", data.page, payloadStr].join("\n"),
       headers: { "Content-Type": "text/plain;charset=UTF-8" }, // avoid preflight
       mode: "no-cors", // if you don't need to read the response
       credentials: "omit", // skip cookies unless the server needs them

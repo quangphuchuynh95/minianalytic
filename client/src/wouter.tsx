@@ -1,9 +1,15 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { event } from "./track-event";
+import { event, setAnalyticsUser } from "./track-event";
 
 export function WouterTracker({ user }: { user: string | undefined }) {
   const [location] = useLocation();
+
+  useEffect(() => {
+    if (user) {
+      setAnalyticsUser(user);
+    }
+  }, [user]);
 
   useEffect(() => {
     event({

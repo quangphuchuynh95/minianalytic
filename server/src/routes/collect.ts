@@ -110,11 +110,15 @@ function getClientIp(c: Context): string {
 }
 
 function processTextData(data: string): PostData {
-  const [user, type, page, rawPayload] = data.split("\n", 4);
+  const lines = data.split("\n");
+  const user = lines[0] ?? "";
+  const type = lines[1] ?? "";
+  const page = lines[2] ?? "";
+  const rawPayload = lines.slice(3).join("\n").trim();
   return {
     user,
     type,
     page,
-    payload: rawPayload?.trim() || "{}",
+    payload: rawPayload || "{}",
   };
 }
