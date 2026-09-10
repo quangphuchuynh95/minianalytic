@@ -15,7 +15,7 @@ import { logger as loggerMiddleware } from "hono/logger";
   app.post("/collect/v0", ...routes.collect);
 
   const server = Bun.serve({
-    port: process.env.NODE_ENV,
+    port: Number(process.env.PORT) || 9765,
     fetch: app.fetch,
   });
 
