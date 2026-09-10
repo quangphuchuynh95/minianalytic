@@ -4,6 +4,7 @@ import { appFactory } from "./app.factory";
 import { routes } from "./routes";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { logger as loggerMiddleware } from "hono/logger";
+import { cors } from "hono/cors";
 
 (async function main() {
   const app = appFactory.createApp();
@@ -11,6 +12,14 @@ import { logger as loggerMiddleware } from "hono/logger";
   app.use(trimTrailingSlash());
 
   app.use(loggerMiddleware());
+
+  app.use(
+    cors({
+      origin: "*",
+      allowMethods: ["POST", "GET", "OPTIONS"],
+      allowHeaders: ["Content-Type", "User-Agent"],
+    })
+  );
 
   app.post("/collect/v0", ...routes.collect);
 
