@@ -10,6 +10,7 @@ export interface PostData {
   user?: string;
   type: string;
   page: string;
+  payload?: string;
 }
 
 export interface ProcessedData extends PostData {
@@ -43,7 +44,11 @@ export const collect = appFactory.createHandlers(async (c) => {
 });
 
 async function appendTsv(data: ProcessedData): Promise<void> {
-  // time, session, user, ip, userAgent, type, page
+  // time, session, user, ip, userAgent, type, page, payload
+  const sanitizedPayload = (data.payload || "{}")
+    .replaceAll("\t", " ")
+    .replaceAll("\n", " ");
+
   const row = [
     data.time.getTime().toString(),
     data.session,
@@ -52,6 +57,7 @@ async function appendTsv(data: ProcessedData): Promise<void> {
     data.userAgent,
     data.type,
     data.page,
+    sanitizedPayload,
   ]
     .map((v) => v.replaceAll("\t", " ").replaceAll("\n", " "))
     .join("\t");
@@ -104,10 +110,11 @@ function getClientIp(c: Context): string {
 }
 
 function processTextData(data: string): PostData {
-  const [user, type, page] = data.split("\n", 3);
+  const [user, type, page, rawPayload] = data.split("\n", 4);
   return {
     user,
     type,
     page,
+    payload: rawPayload?.trim() || "{}",
   };
 }

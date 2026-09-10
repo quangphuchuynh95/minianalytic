@@ -22,7 +22,7 @@ fi
 
 run_clickhouse_insert() {
   local file="$1"
-  local query="INSERT INTO ${TABLE_NAME} FORMAT TSV"
+  local query="INSERT INTO ${TABLE_NAME} (time, session, user, ip, user_agent, type, page, payload) FORMAT TSV"
   local args=()
 
   if [[ -n "${CLICKHOUSE_HOST:-}" ]]; then

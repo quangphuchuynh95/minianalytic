@@ -1,2 +1,3 @@
-export { event, type EventData } from "./track-event";
+export { event, type EventData, type AnalyticEventType } from "./track-event";
 export { WouterTracker } from "./wouter";
+
